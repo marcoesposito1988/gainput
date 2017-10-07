@@ -123,6 +123,8 @@ public:
 	 * \return The newly created input device.
 	 */
 	template<class T> T* CreateAndGetDevice(unsigned index = InputDevice::AutoIndex, InputDevice::DeviceVariant variant = InputDevice::DV_STANDARD);
+    /// Registers an input device with the manager.
+    DeviceId RegisterDevice(InputDevice* device);
 	/// Returns the input device with the given ID.
 	/**
 	 * \return The input device or 0 if it doesn't exist.
@@ -284,6 +286,18 @@ InputManager::CreateAndGetDevice(unsigned index, InputDevice::DeviceVariant vari
 	++nextDeviceId_;
 	DeviceCreated(device);
 	return device;
+}
+
+inline
+DeviceId
+InputManager::RegisterDevice(InputDevice* device)
+{
+    GAINPUT_ASSERT(device->deviceId_ == unsigned(-1));
+
+    device->deviceId_ = nextDeviceId_;
+    devices_[nextDeviceId_] = device;
+    DeviceCreated(device);
+    return nextDeviceId_++;
 }
 
 inline
