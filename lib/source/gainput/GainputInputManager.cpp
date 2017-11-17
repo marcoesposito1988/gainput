@@ -167,6 +167,9 @@ InputManager::GetTime() const
 	mach_port_deallocate(mach_task_self(), cclock);
 	uint64_t t = mts.tv_sec*1000ul + mts.tv_nsec/1000000ul;
 	return t;
+#elif defined(GAINPUT_PLATFORM_EMSCRIPTEN)
+	uint64_t t = uint64_t( 1000.0f * emscripten_get_now() );
+	return t;
 #else
 #error Gainput: No time support
 #endif

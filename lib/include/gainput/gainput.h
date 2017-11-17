@@ -35,10 +35,15 @@
 	#else
 		#error Gainput: Unknown/unsupported Apple platform!
 	#endif
+#elif defined(__EMSCRIPTEN__)
+	#include <emscripten.h>
+	#define GAINPUT_LIBEXPORT
+	#define GAINPUT_PLATFORM_EMSCRIPTEN
 #else
 	#error Gainput: Unknown/unsupported platform!
 #endif
 
+#include <stdint.h>
 
 //#define GAINPUT_DEBUG
 //#define GAINPUT_DEV
