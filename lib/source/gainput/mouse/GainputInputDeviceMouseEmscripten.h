@@ -5,7 +5,7 @@
 #include <gainput/GainputHelpers.h>
 
 #include <emscripten.h>
-#include <html5.h>
+#include <emscripten/html5.h>
 #include <iostream>
 
 namespace gainput
