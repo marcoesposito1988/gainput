@@ -17,6 +17,8 @@
 	#include "GainputInputDeviceMouseWinRaw.h"
 #elif defined(GAINPUT_PLATFORM_MAC)
 	#include "GainputInputDeviceMouseMac.h"
+#elif defined(GAINPUT_PLATFORM_EMSCRIPTEN)
+	#include "GainputInputDeviceMouseEmscripten.h"
 #endif
 
 namespace gainput
@@ -52,6 +54,8 @@ InputDeviceMouse::InputDeviceMouse(InputManager& manager, DeviceId device, unsig
 	}
 #elif defined(GAINPUT_PLATFORM_MAC)
 	impl_ = manager.GetAllocator().New<InputDeviceMouseImplMac>(manager, *this, *state_, *previousState_);
+#elif defined(GAINPUT_PLATFORM_EMSCRIPTEN)
+	impl_ = manager.GetAllocator().New<InputDeviceMouseImplEmscripten>(manager, *this, *state_, *previousState_);
 #endif
 
 	if (!impl_)
