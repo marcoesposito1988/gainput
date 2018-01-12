@@ -185,25 +185,23 @@ static void OnDeviceConnected(void* inContext, IOReturn inResult, void* inSender
 		device->axisDialect_[kHIDUsage_GD_Y] = PadButtonLeftStickY;
 		device->axisDialect_[kHIDUsage_GD_Rx] = PadButtonRightStickX;
 		device->axisDialect_[kHIDUsage_GD_Ry] = PadButtonRightStickY;
-		device->axisDialect_[kHIDUsage_GD_Rx] = PadButtonAxis4;
-		device->axisDialect_[kHIDUsage_GD_Ry] = PadButtonAxis5;
-		device->buttonDialect_[0x09] = PadButtonSelect;
-		device->buttonDialect_[0x0b] = PadButtonL3;
-		device->buttonDialect_[0x0c] = PadButtonR3;
-		device->buttonDialect_[0x0A] = PadButtonStart;
-		device->buttonDialect_[0xfffffff0] = PadButtonUp;
-		device->buttonDialect_[0xfffffff1] = PadButtonRight;
-		device->buttonDialect_[0xfffffff2] = PadButtonDown;
-		device->buttonDialect_[0xfffffff3] = PadButtonLeft;
+		device->axisDialect_[kHIDUsage_GD_Z] = PadButtonAxis4;
+		device->axisDialect_[kHIDUsage_GD_Rz] = PadButtonAxis5;
+		device->buttonDialect_[0x0a] = PadButtonSelect;
+		device->buttonDialect_[0x07] = PadButtonL3;
+		device->buttonDialect_[0x08] = PadButtonR3;
+		device->buttonDialect_[0x09] = PadButtonStart;
+		device->buttonDialect_[0x0c] = PadButtonUp;
+		device->buttonDialect_[0x0f] = PadButtonRight;
+		device->buttonDialect_[0x0d] = PadButtonDown;
+		device->buttonDialect_[0x0e] = PadButtonLeft;
 		device->buttonDialect_[0x05] = PadButtonL1;
-        device->buttonDialect_[0x07] = PadButtonL2;
 		device->buttonDialect_[0x06] = PadButtonR1;
-		device->buttonDialect_[0x08] = PadButtonR2;
 		device->buttonDialect_[0x04] = PadButtonY;
-		device->buttonDialect_[0x03] = PadButtonB;
-		device->buttonDialect_[0x02] = PadButtonA;
-		device->buttonDialect_[0x01] = PadButtonX;
-		device->buttonDialect_[0x0d] = PadButtonHome;
+		device->buttonDialect_[0x02] = PadButtonB;
+		device->buttonDialect_[0x01] = PadButtonA;
+		device->buttonDialect_[0x03] = PadButtonX;
+		device->buttonDialect_[0x0b] = PadButtonHome;
 	}
 	else if (vendorId == 0x054c && (productId == 0x5c4 || productId == 0x9cc)) // Sony DualShock 4
 	{
