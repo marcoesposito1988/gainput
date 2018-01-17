@@ -203,6 +203,20 @@ static void OnDeviceConnected(void* inContext, IOReturn inResult, void* inSender
 		device->buttonDialect_[0x03] = PadButtonX;
 		device->buttonDialect_[0x0b] = PadButtonHome;
 	}
+	else if (vendorId == 0x2563 && productId == 0x575)   // XCSource ZM-X6 Bluetooth gamepad https://www.amazon.com.au/gp/product/B078H5PVJR/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1
+	{
+		printf("Found XCSource ZM-X6 Bluetooth controller.\n");
+		device->minAxis_ = 0;
+		device->maxAxis_ = 256;
+		device->minTriggerAxis_ = device->minAxis_;
+		device->maxTriggerAxis_ = device->maxAxis_;
+		device->axisDialect_[kHIDUsage_GD_X] = PadButtonLeftStickX;
+		device->axisDialect_[kHIDUsage_GD_Y] = PadButtonLeftStickY;
+		device->axisDialect_[kHIDUsage_GD_Z] = PadButtonRightStickX;
+		device->axisDialect_[kHIDUsage_GD_Rz] = PadButtonRightStickY;
+		device->buttonDialect_[0x05] = PadButtonL1;
+		device->buttonDialect_[0x03] = PadButtonA;
+	}
 	else if (vendorId == 0x054c && (productId == 0x5c4 || productId == 0x9cc)) // Sony DualShock 4
 	{
 		device->minAxis_ = 0;
