@@ -197,7 +197,6 @@ public:
 
         XGenericEventCookie *cookie = &event.xcookie;
 
-        // printf("EVENT TYPE %d\n", cookie->evtype);
         switch(cookie->evtype)
         {
             case XI_RawKeyPress:
@@ -213,52 +212,6 @@ public:
             default:
                 break;
         }
-
-        /*
-		if (event.type == KeyPress || event.type == KeyRelease)
-		{
-			XKeyEvent& keyEvent = event.xkey;
-			KeySym keySym = XkbKeycodeToKeysym(keyEvent.display, keyEvent.keycode, 0, 0);
-			const bool pressed = event.type == KeyPress;
-
-			// Handle key repeat
-			if (event.type == KeyRelease && XPending(keyEvent.display))
-			{
-				XEvent nextEvent;
-				XPeekEvent(keyEvent.display, &nextEvent);
-				if (nextEvent.type == KeyPress
-					&& nextEvent.xkey.keycode == event.xkey.keycode
-					&& nextEvent.xkey.time == event.xkey.time)
-				{
-					XNextEvent(keyEvent.display, &nextEvent);
-					return;
-				}
-			}
-
-			if (dialect_.count(keySym))
-			{
-				const DeviceButtonId buttonId = dialect_[keySym];
-				HandleButton(device_, nextState_, delta_, buttonId, pressed);
-			}
-#ifdef GAINPUT_DEBUG
-			else
-			{
-				char* str = XKeysymToString(keySym);
-				GAINPUT_LOG("Unmapped key >> keycode: %d, keysym: %d, str: %s\n", keyEvent.keycode, int(keySym), str);
-			}
-#endif
-
-			if (textInputEnabled_)
-			{
-				char buf[32];
-				int len = XLookupString(&keyEvent, buf, 32, 0, 0);
-				if (len == 1)
-				{
-					textBuffer_.Put(buf[0]);
-				}
-			}
-		}
-        */
 	}
 
 	void HandleRawEvent(XIRawEvent* event)
@@ -266,20 +219,6 @@ public:
         KeySym keySym = XkbKeycodeToKeysym(event->display, event->detail, 0, 0);
         const bool pressed = event->evtype == XI_RawKeyPress;
 
-        /* Handle key repeat
-        if (event.type == KeyRelease && XPending(keyEvent.display))
-        {
-            XEvent nextEvent;
-            XPeekEvent(keyEvent.display, &nextEvent);
-            if (nextEvent.type == KeyPress
-                && nextEvent.xkey.keycode == event.xkey.keycode
-                && nextEvent.xkey.time == event.xkey.time)
-            {
-                XNextEvent(keyEvent.display, &nextEvent);
-                return;
-            }
-        }
-        */
         if (dialect_.count(keySym))
         {
             const DeviceButtonId buttonId = dialect_[keySym];
@@ -321,20 +260,6 @@ public:
         KeySym keySym = XkbKeycodeToKeysym(event->display, event->detail, 0, 0);
         const bool pressed = event->evtype == XI_KeyPress;
 
-        /* Handle key repeat
-        if (event.type == KeyRelease && XPending(keyEvent.display))
-        {
-            XEvent nextEvent;
-            XPeekEvent(keyEvent.display, &nextEvent);
-            if (nextEvent.type == KeyPress
-                && nextEvent.xkey.keycode == event.xkey.keycode
-                && nextEvent.xkey.time == event.xkey.time)
-            {
-                XNextEvent(keyEvent.display, &nextEvent);
-                return;
-            }
-        }
-        */
         if (dialect_.count(keySym))
         {
             const DeviceButtonId buttonId = dialect_[keySym];

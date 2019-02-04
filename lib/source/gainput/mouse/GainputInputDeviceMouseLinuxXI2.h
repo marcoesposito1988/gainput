@@ -71,7 +71,6 @@ public:
 
         XGenericEventCookie *cookie = &event.xcookie;
 
-        // printf("EVENT TYPE %d\n", cookie->evtype);
         switch(cookie->evtype)
         {
             case XI_RawMotion:
@@ -94,8 +93,6 @@ public:
     void HandleRawEvent(XIRawEvent* event)
     {
         if (event->detail != 0) {
-            printf("    detail: %d\n", event->detail);
-
             GAINPUT_ASSERT(event->detail > 0);
             const DeviceButtonId buttonId = event->detail - 1;
             GAINPUT_ASSERT(buttonId <= MouseButtonMax);
