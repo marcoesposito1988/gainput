@@ -7,7 +7,9 @@
 #include <time.h>
 #include <X11/Xlib.h>
 #include "keyboard/GainputInputDeviceKeyboardLinux.h"
+#include "keyboard/GainputInputDeviceKeyboardLinuxXI2.h"
 #include "mouse/GainputInputDeviceMouseLinux.h"
+#include "mouse/GainputInputDeviceMouseLinuxXI2.h"
 #elif defined(GAINPUT_PLATFORM_WIN)
 #include "keyboard/GainputInputDeviceKeyboardWin.h"
 #include "keyboard/GainputInputDeviceKeyboardWinRaw.h"
@@ -318,21 +320,39 @@ InputManager::HandleEvent(XEvent& event)
 			continue;
 		}
 #endif
-		if (it->second->GetType() == InputDevice::DT_KEYBOARD
-			&& it->second->GetVariant() == InputDevice::DV_STANDARD)
+		if (it->second->GetType() == InputDevice::DT_KEYBOARD)
 		{
-			InputDeviceKeyboard* keyboard = static_cast<InputDeviceKeyboard*>(it->second);
-			InputDeviceKeyboardImplLinux* keyboardImpl = static_cast<InputDeviceKeyboardImplLinux*>(keyboard->GetPimpl());
-			GAINPUT_ASSERT(keyboardImpl);
-			keyboardImpl->HandleEvent(event);
+            InputDeviceKeyboard* keyboard = static_cast<InputDeviceKeyboard*>(it->second);
+
+		    if (it->second->GetVariant() == InputDevice::DV_STANDARD) {
+                InputDeviceKeyboardImplLinux* keyboardImpl = static_cast<InputDeviceKeyboardImplLinux*>(keyboard->GetPimpl());
+                GAINPUT_ASSERT(keyboardImpl);
+                keyboardImpl->HandleEvent(event);
+		    }
+#if defined(GAINPUT_ENABLE_XI2)
+            else if (it->second->GetVariant() == InputDevice::DV_RAW) {
+                InputDeviceKeyboardImplLinuxXI2* keyboardImpl = static_cast<InputDeviceKeyboardImplLinuxXI2*>(keyboard->GetPimpl());
+                GAINPUT_ASSERT(keyboardImpl);
+                keyboardImpl->HandleEvent(event);
+            }
+#endif
 		}
-		else if (it->second->GetType() == InputDevice::DT_MOUSE
-			&& it->second->GetVariant() == InputDevice::DV_STANDARD)
+		else if (it->second->GetType() == InputDevice::DT_MOUSE)
 		{
 			InputDeviceMouse* mouse = static_cast<InputDeviceMouse*>(it->second);
-			InputDeviceMouseImplLinux* mouseImpl = static_cast<InputDeviceMouseImplLinux*>(mouse->GetPimpl());
-			GAINPUT_ASSERT(mouseImpl);
-			mouseImpl->HandleEvent(event);
+
+			if (it->second->GetVariant() == InputDevice::DV_STANDARD) {
+                InputDeviceMouseImplLinux* mouseImpl = static_cast<InputDeviceMouseImplLinux*>(mouse->GetPimpl());
+                GAINPUT_ASSERT(mouseImpl);
+                mouseImpl->HandleEvent(event);
+			}
+#if defined(GAINPUT_ENABLE_XI2)
+            else if (it->second->GetVariant() == InputDevice::DV_RAW) {
+                InputDeviceMouseImplLinuxXI2* mouseImpl = static_cast<InputDeviceMouseImplLinuxXI2*>(mouse->GetPimpl());
+                GAINPUT_ASSERT(mouseImpl);
+                mouseImpl->HandleEvent(event);
+            }
+#endif
 		}
 	}
 }

@@ -12,6 +12,7 @@
 #if defined(GAINPUT_PLATFORM_LINUX)
 	#include "GainputInputDeviceMouseLinux.h"
 	#include "GainputInputDeviceMouseEvdev.h"
+	#include "GainputInputDeviceMouseLinuxXI2.h"
 #elif defined(GAINPUT_PLATFORM_WIN)
 	#include "GainputInputDeviceMouseWin.h"
 	#include "GainputInputDeviceMouseWinRaw.h"
@@ -37,10 +38,17 @@ InputDeviceMouse::InputDeviceMouse(InputManager& manager, DeviceId device, unsig
 	{
 		impl_ = manager.GetAllocator().New<InputDeviceMouseImplLinux>(manager, *this, *state_, *previousState_);
 	}
+#if defined(GAINPUT_ENABLE_XI2)
+	else if (variant == DV_RAW)
+	{
+		impl_ = manager.GetAllocator().New<InputDeviceMouseImplLinuxXI2>(manager, *this, *state_, *previousState_);
+	}
+#else
 	else if (variant == DV_RAW)
 	{
 		impl_ = manager.GetAllocator().New<InputDeviceMouseImplEvdev>(manager, *this, *state_, *previousState_);
 	}
+#endif
 #elif defined(GAINPUT_PLATFORM_WIN)
 	if (variant == DV_STANDARD)
 	{
