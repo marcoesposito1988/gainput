@@ -4,6 +4,7 @@
 
 #include "GainputInputDeviceMouseImpl.h"
 #include <gainput/GainputHelpers.h>
+#include <memory>
 
 #include "../GainputWindows.h"
 
