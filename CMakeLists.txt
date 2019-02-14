@@ -8,6 +8,11 @@ option(GAINPUT_SAMPLES "Build Samples for Gainput" ON)
 option(GAINPUT_TESTS "Build Tests for Gainput" ON)
 option(GAINPUT_BUILD_SHARED "BUILD_SHARED" ON)
 option(GAINPUT_BUILD_STATIC "BUILD_STATIC" ON)
+option(GAINPUT_ENABLE_XI2 "ENABLE_XI2" OFF)
+
+if(UNIX AND GAINPUT_ENABLE_XI2)
+	add_definitions(-DGAINPUT_ENABLE_XI2)
+endif()
 
 if(!WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")

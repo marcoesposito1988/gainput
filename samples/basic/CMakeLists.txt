@@ -28,7 +28,7 @@ endif()
 target_link_libraries(basicsample gainputstatic)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	target_link_libraries(basicsample X11 GL rt)
+	target_link_libraries(basicsample X11 GL rt Xext Xi)
 elseif(WIN32)
 	target_link_libraries(basicsample ${XINPUT} ws2_32)
 elseif(APPLE)
