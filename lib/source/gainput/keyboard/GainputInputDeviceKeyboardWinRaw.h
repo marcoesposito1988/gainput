@@ -6,7 +6,9 @@
 
 #include "GainputInputDeviceKeyboardImpl.h"
 #include <gainput/GainputHelpers.h>
-#include <memory>
+#include <gainput/GainputAllocator.h>
+#include <gainput/GainputContainers.h>
+
 
 #ifndef HID_USAGE_PAGE_GENERIC
 #define HID_USAGE_PAGE_GENERIC         ((USHORT) 0x01)
@@ -198,16 +200,12 @@ public:
 		// We aren't really supposed to use STL nor C++ in Gainput,
 		// and neither should we allocate memory everytime an event is fired.
 		// So will just keep this as a temporary solution until time allows.
-		std::unique_ptr<BYTE[]> lpb = std::make_unique<BYTE[]>(dwSize);
-		if (lpb == NULL) {
-			return;
-		} 
-	
-		if (GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, lpb.get(), &dwSize, sizeof(RAWINPUTHEADER)) != dwSize) {
+		Array<BYTE> lpb(GetDefaultAllocator(), dwSize);
+		if (GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, lpb.begin(), &dwSize, sizeof(RAWINPUTHEADER)) != dwSize) {
 			return;
 		}
 	
-		RAWINPUT* raw = (RAWINPUT*)lpb.get();
+		RAWINPUT* raw = (RAWINPUT*)lpb.begin();
 		if (raw->header.dwType == RIM_TYPEKEYBOARD) 
 		{
 			USHORT vkey = raw->data.keyboard.VKey;

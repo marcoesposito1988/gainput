@@ -4,7 +4,8 @@
 
 #include "GainputInputDeviceMouseImpl.h"
 #include <gainput/GainputHelpers.h>
-#include <memory>
+#include <gainput/GainputAllocator.h>
+#include <gainput/GainputContainers.h>
 
 #include "../GainputWindows.h"
 
@@ -81,19 +82,12 @@ public:
 		UINT dwSize;
 		GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
 		
-		// We aren't really supposed to use STL nor C++ in Gainput,
-		// and neither should we allocate memory everytime an event is fired.
-		// So will just keep this as a temporary solution until time allows.
-		std::unique_ptr<BYTE[]> lpb = std::make_unique<BYTE[]>(dwSize);
-		if (lpb == NULL) {
-			return;
-		} 
-	
-		if (GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, lpb.get(), &dwSize, sizeof(RAWINPUTHEADER)) != dwSize) {
+		Array<BYTE> lpb(GetDefaultAllocator(), dwSize);
+		if (GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, lpb.begin(), &dwSize, sizeof(RAWINPUTHEADER)) != dwSize) {
 			return;
 		}
 	
-		RAWINPUT* raw = (RAWINPUT*)lpb.get();
+		RAWINPUT* raw = (RAWINPUT*)lpb.begin();
 		if (raw->header.dwType == RIM_TYPEMOUSE) 
 		{
 			if (raw->data.mouse.usFlags == MOUSE_MOVE_RELATIVE)
