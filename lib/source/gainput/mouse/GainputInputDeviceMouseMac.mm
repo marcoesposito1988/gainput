@@ -14,33 +14,29 @@
 
 namespace {
 
-static float theoreticalTitleBarHeight()
-{
-	NSRect frame = NSMakeRect (0, 0, 100, 100);
+static float theoreticalTitleBarHeight() {
+	NSRect frame = NSMakeRect(0, 0, 100, 100);
 	NSRect contentRect = [NSWindow contentRectForFrameRect:frame
 		styleMask:NSWindowStyleMaskTitled];
 	return (frame.size.height - contentRect.size.height);
 }
 
-CGEventRef MouseTap(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void* user)
-{
-	gainput::InputDeviceMouseImplMac* device = reinterpret_cast<gainput::InputDeviceMouseImplMac*>(user);
-	GAINPUT_ASSERT(device->previousState_);
+CGEventRef MouseTap(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *user) {
+	gainput::InputDeviceMouseImplMac *device = reinterpret_cast<gainput::InputDeviceMouseImplMac *>(user);
+			GAINPUT_ASSERT(device->previousState_);
 
 	if (type == kCGEventTapDisabledByTimeout
-			|| type == kCGEventTapDisabledByUserInput)
-	{
+			|| type == kCGEventTapDisabledByUserInput) {
 		// Probably timeout, re-enable!
 		CGEventTapEnable(reinterpret_cast<CFMachPortRef>(device->eventTap_), true);
 	}
 
-    gainput::InputManager& manager = device->manager_;
-	NSApplication* app = [NSApplication sharedApplication];
-	NSWindow* window = app.keyWindow;
-	if (window)
-	{
+	gainput::InputManager &manager = device->manager_;
+	NSApplication *app = [NSApplication sharedApplication];
+	NSWindow *window = app.keyWindow;
+	if (window) {
 		CGPoint theLocation = CGEventGetUnflippedLocation(event);
-        
+
 		NSRect rect = NSMakeRect(theLocation.x, theLocation.y, 0, 0);
 		NSRect rect2 = [window convertRectFromScreen:rect];
         
@@ -51,87 +47,86 @@ CGEventRef MouseTap(CGEventTapProxy proxy, CGEventType type, CGEventRef event, v
 		manager.EnqueueConcurrentChange(device->device_, device->nextState_, device->delta_, gainput::MouseAxisX, x);
 		manager.EnqueueConcurrentChange(device->device_, device->nextState_, device->delta_, gainput::MouseAxisY, y);
 
-		if (type == kCGEventLeftMouseDown || type == kCGEventLeftMouseUp)
-		{
-			manager.EnqueueConcurrentChange(device->device_, device->nextState_, device->delta_, gainput::MouseButton0, type == kCGEventLeftMouseDown);
-		}
-		else if (type == kCGEventRightMouseDown || type == kCGEventRightMouseUp)
-		{
-			manager.EnqueueConcurrentChange(device->device_, device->nextState_, device->delta_, gainput::MouseButton2, type == kCGEventRightMouseDown);
-		}
-		else if (type == kCGEventOtherMouseDown || type == kCGEventOtherMouseUp)
-		{
+		if (type == kCGEventLeftMouseDown || type == kCGEventLeftMouseUp) {
+			manager.EnqueueConcurrentChange(device->device_,
+																			device->nextState_,
+																			device->delta_,
+																			gainput::MouseButton0,
+																			type == kCGEventLeftMouseDown);
+		} else if (type == kCGEventRightMouseDown || type == kCGEventRightMouseUp) {
+			manager.EnqueueConcurrentChange(device->device_,
+																			device->nextState_,
+																			device->delta_,
+																			gainput::MouseButton2,
+																			type == kCGEventRightMouseDown);
+		} else if (type == kCGEventOtherMouseDown || type == kCGEventOtherMouseUp) {
 			int buttonNum = CGEventGetIntegerValueField(event, kCGMouseEventButtonNumber);
 			gainput::DeviceButtonId buttonId = gainput::MouseButton1;
-			if (buttonNum > kCGMouseButtonCenter)
-			{
+			if (buttonNum > kCGMouseButtonCenter) {
 				buttonId = gainput::MouseButton3 + buttonNum - kCGMouseButtonCenter;
 			}
-			manager.EnqueueConcurrentChange(device->device_, device->nextState_, device->delta_, buttonId, type == kCGEventOtherMouseDown);
-		}
-		else if (type == kCGEventScrollWheel)
-		{
+			manager.EnqueueConcurrentChange(device->device_,
+																			device->nextState_,
+																			device->delta_,
+																			buttonId,
+																			type == kCGEventOtherMouseDown);
+		} else if (type == kCGEventScrollWheel) {
 			int const deltaAxis = CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1);
-            if (deltaAxis != 0)
-            {
-                manager.EnqueueConcurrentChange(
-                    device->device_,
-                    device->nextState_,
-                    device->delta_,
-                    deltaAxis > 0 ? gainput::MouseButtonWheelDown : gainput::MouseButtonWheelUp,
-                    true);
-            }
+			if (deltaAxis != 0) {
+				manager.EnqueueConcurrentChange(
+						device->device_,
+						device->nextState_,
+						device->delta_,
+						deltaAxis > 0 ? gainput::MouseButtonWheelDown : gainput::MouseButtonWheelUp,
+						true);
+			}
+		}
+	} else {
+		// Window was unfocused.
+		for (unsigned i = gainput::MouseButton0; i < gainput::MouseButtonCount; ++i) {
+			gainput::HandleButton(device->device_, device->nextState_, device->delta_, i, false);
 		}
 	}
-    else
-    {
-        // Window was unfocused.
-        for (unsigned i = gainput::MouseButton0; i < gainput::MouseButtonCount; ++ i)
-        {
-            gainput::HandleButton(device->device_, device->nextState_, device->delta_, i, false);
-        }
-    }
 
 	return event;
 }
 
 }
 
-namespace gainput
-{
+namespace gainput {
 
-InputDeviceMouseImplMac::InputDeviceMouseImplMac(InputManager& manager, InputDevice& device, InputState& state, InputState& previousState) :
-	manager_(manager),
-	device_(device),
-	state_(&state),
-	previousState_(&previousState),
-	nextState_(manager.GetAllocator(), MouseButtonCount + MouseAxisCount),
-	delta_(0)
-{
+InputDeviceMouseImplMac::InputDeviceMouseImplMac(InputManager &manager,
+																								 InputDevice &device,
+																								 InputState &state,
+																								 InputState &previousState) :
+		manager_(manager),
+		device_(device),
+		state_(&state),
+		previousState_(&previousState),
+		nextState_(manager.GetAllocator(), MouseButtonCount + MouseAxisCount),
+		delta_(0) {
 	CGEventMask eventMask =
-		CGEventMaskBit(kCGEventLeftMouseDown)
-		| CGEventMaskBit(kCGEventLeftMouseUp)
-		| CGEventMaskBit(kCGEventRightMouseDown)
-		| CGEventMaskBit(kCGEventRightMouseUp)
-		| CGEventMaskBit(kCGEventOtherMouseDown)
-		| CGEventMaskBit(kCGEventOtherMouseUp)
-		| CGEventMaskBit(kCGEventMouseMoved)
-		| CGEventMaskBit(kCGEventLeftMouseDragged)
-		| CGEventMaskBit(kCGEventRightMouseDragged)
-        | CGEventMaskBit(kCGEventOtherMouseDragged)
-        | CGEventMaskBit(kCGEventScrollWheel)
-		;
+			CGEventMaskBit(kCGEventLeftMouseDown)
+					| CGEventMaskBit(kCGEventLeftMouseUp)
+					| CGEventMaskBit(kCGEventRightMouseDown)
+					| CGEventMaskBit(kCGEventRightMouseUp)
+					| CGEventMaskBit(kCGEventOtherMouseDown)
+					| CGEventMaskBit(kCGEventOtherMouseUp)
+					| CGEventMaskBit(kCGEventMouseMoved)
+					| CGEventMaskBit(kCGEventLeftMouseDragged)
+					| CGEventMaskBit(kCGEventRightMouseDragged)
+					| CGEventMaskBit(kCGEventOtherMouseDragged)
+					| CGEventMaskBit(kCGEventScrollWheel);
 
 	CFMachPortRef eventTap = CGEventTapCreate(kCGSessionEventTap,
-			kCGHeadInsertEventTap,
-			kCGEventTapOptionDefault,
-			eventMask,
-			MouseTap,
-			this);
+																						kCGHeadInsertEventTap,
+																						kCGEventTapOptionListenOnly,
+																						eventMask,
+																						MouseTap,
+																						this);
 
-	if (!eventTap)
-	{  
-		GAINPUT_ASSERT(false);
+	if (!eventTap) {
+				GAINPUT_ASSERT(false);
 		return;
 	}
 
@@ -143,21 +138,18 @@ InputDeviceMouseImplMac::InputDeviceMouseImplMac(InputManager& manager, InputDev
 	CGEventTapEnable(eventTap, true);
 }
 
-InputDeviceMouseImplMac::~InputDeviceMouseImplMac()
-{
+InputDeviceMouseImplMac::~InputDeviceMouseImplMac() {
 	CFRelease(reinterpret_cast<CFMachPortRef>(eventTap_));
 }
 
+void InputDeviceMouseImplMac::Update(InputDeltaState *delta) {
+	delta_ = delta;
 
-void InputDeviceMouseImplMac::Update(InputDeltaState* delta)
-{
-    delta_ = delta;
-    
-    // Reset mouse wheel buttons
-    HandleButton(device_, nextState_, delta_, MouseButtonWheelUp, false);
-    HandleButton(device_, nextState_, delta_, MouseButtonWheelDown, false);
+	// Reset mouse wheel buttons
+	HandleButton(device_, nextState_, delta_, MouseButtonWheelUp, false);
+	HandleButton(device_, nextState_, delta_, MouseButtonWheelDown, false);
 
-    *state_ = nextState_;
+	*state_ = nextState_;
 }
 
 }
