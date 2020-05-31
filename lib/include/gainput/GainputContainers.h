@@ -319,7 +319,7 @@ public:
 
 		if (vi == InvalidKey)
 		{
-			keys_[ha] = values_.size();
+			keys_[ha] = (uint32_t)values_.size();
 		}
 		else
 		{
@@ -327,7 +327,7 @@ public:
 			{
 				if (values_[vi].next == InvalidKey)
 				{
-					values_[vi].next = values_.size();
+					values_[vi].next = (uint32_t)values_.size();
 					break;
 				}
 				else
@@ -340,7 +340,7 @@ public:
 		Node node;
 		node.first = k;
 		node.second = v;
-		node.next = InvalidKey;
+		node.next = (uint32_t)InvalidKey;
 		values_.push_back(node);
 
 		++size_;
@@ -438,7 +438,7 @@ private:
 		Array<Node> values(allocator_, values_.size());
 
 		for (size_t i = 0; i < newSize; ++i)
-			keys.push_back(InvalidKey);
+			keys.push_back((uint32_t)InvalidKey);
 
 		keys_.swap(keys);
 		values_.swap(values);

@@ -19,6 +19,7 @@ endif()
 if (GAINPUT_BUILD_SHARED)
   message(STATUS "..Building shared libraries (-DGAINPUT_BUILD_SHARED=OFF to disable)")
   add_library(gainput SHARED ${sources} ${mmsources})
+  target_include_directories(gainput PUBLIC include)
   set_target_properties(gainput PROPERTIES
     OUTPUT_NAME gainput
     DEBUG_POSTFIX -d
@@ -32,6 +33,7 @@ endif (GAINPUT_BUILD_SHARED)
 if (GAINPUT_BUILD_STATIC)
   message(STATUS "..Building static libraries (-DGAINPUT_BUILD_STATIC=OFF to disable)")
   add_library(gainputstatic STATIC ${sources} ${mmsources})
+  target_include_directories(gainputstatic PUBLIC include)
   set_target_properties(gainputstatic PROPERTIES DEBUG_POSTFIX -d FOLDER gainput)
   set(install_libs ${install_libs} gainputstatic)
 endif (GAINPUT_BUILD_STATIC)
