@@ -191,7 +191,6 @@ private:
 		}
 
 		deviceState_ = InputDevice::DS_UNAVAILABLE;
-
 		fd_ = open(PadDeviceIds[index_], O_RDONLY | O_NONBLOCK);
 		if (fd_ < 0)
 		{
