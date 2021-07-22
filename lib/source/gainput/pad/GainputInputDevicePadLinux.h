@@ -245,8 +245,10 @@ private:
 			buttonDialect_[14] = PadButtonA;
 			buttonDialect_[15] = PadButtonX;
 			buttonDialect_[16] = PadButtonHome;
-		}
-        else if (strcmp(name, "Microsoft X-Box 360 pad") == 0 || strcmp(name, "Microsoft X-Box One S pad") ==0)
+        }
+        else if (strcmp(name, "Microsoft X-Box 360 pad") == 0
+                 || strcmp(name, "Microsoft X-Box One S pad") == 0
+                 || strcmp(name, "Xbox Wireless Controller") == 0)
 		{
 #ifdef GAINPUT_DEBUG
 			GAINPUT_LOG("  --> known controller\n");
@@ -274,6 +276,13 @@ private:
 			axisDialect_[-1] = PadButtonDown;
 			axisDialect_[-2] = PadButtonRight;
 		}
+		else
+		{
+#ifdef GAINPUT_DEBUG
+			GAINPUT_LOG("  --> unknown controller %s\n",name);
+#endif
+		}
+		
 
 		deviceState_ = InputDevice::DS_OK;
 	}
