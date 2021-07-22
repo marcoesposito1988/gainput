@@ -25,6 +25,13 @@ public:
 
 	FilterFunc_T filterFunc;
 	void* filterUserData;
+
+	MappedInput() :
+		rangeMin(0.0f),
+		rangeMax(1.0f),
+		filterFunc(0),
+		filterUserData(0)
+	{ }
 };
 
 typedef Array<MappedInput> MappedInputList;
