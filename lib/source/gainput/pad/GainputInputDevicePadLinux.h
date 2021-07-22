@@ -246,7 +246,7 @@ private:
 			buttonDialect_[15] = PadButtonX;
 			buttonDialect_[16] = PadButtonHome;
 		}
-		else if (strcmp(name, "Microsoft X-Box 360 pad") == 0)
+        else if (strcmp(name, "Microsoft X-Box 360 pad") == 0 || strcmp(name, "Microsoft X-Box One S pad") ==0)
 		{
 #ifdef GAINPUT_DEBUG
 			GAINPUT_LOG("  --> known controller\n");
