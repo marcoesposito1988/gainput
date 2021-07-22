@@ -2,7 +2,8 @@
 #include <gainput/gainput.h>
 #include "dev/GainputDev.h"
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
 
 namespace
 {
@@ -62,7 +63,11 @@ InputMap::InputMap(InputManager& manager, const char* name, Allocator& allocator
 	if (name)
 	{
 		name_ = static_cast<char*>(allocator_.Allocate(strlen(name) + 1));
-		strcpy_s(name_, strlen(name) + 1, name);
+#ifdef _MSC_VER
+        strcpy_s(name_, strlen(name) + 1, name);
+#else
+        strncpy(name_, name, strlen(name) + 1);
+#endif
 	}
 	GAINPUT_DEV_NEW_MAP(this);
 }
