@@ -275,14 +275,24 @@ private:
 			// Dummy entries for IsValidButton
 			axisDialect_[-1] = PadButtonDown;
 			axisDialect_[-2] = PadButtonRight;
-		}
-		else
+        }
+		else if (strncmp(name, "usb gamepad", 11) == 0) // Classic USB NES Controller
 		{
 #ifdef GAINPUT_DEBUG
-			GAINPUT_LOG("  --> unknown controller %s\n",name);
+			GAINPUT_LOG("  --> known controller\n");
 #endif
-		}
-		
+
+			buttonDialect_[0] = PadButtonB;
+			buttonDialect_[1] = PadButtonA;
+			buttonDialect_[8] = PadButtonSelect;
+			buttonDialect_[9] = PadButtonStart;
+        }
+        else
+        {
+#ifdef GAINPUT_DEBUG
+            GAINPUT_LOG("  --> unknown controller %s\n",name);
+#endif
+        }
 
 		deviceState_ = InputDevice::DS_OK;
 	}

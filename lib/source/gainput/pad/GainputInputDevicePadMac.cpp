@@ -263,6 +263,19 @@ static void OnDeviceConnected(void* inContext, IOReturn inResult, void* inSender
 		device->buttonDialect_[0x03] = PadButtonX;
 		device->buttonDialect_[0x0b] = PadButtonHome;
 	}
+	else if (vendorId == 0x0810 && productId == 0xE501) // Classic USB NES Controller
+	{
+		device->minAxis_ = 0;
+		device->maxAxis_ = 256;
+		device->minTriggerAxis_ = device->minAxis_;
+		device->maxTriggerAxis_ = device->maxAxis_;
+		device->axisDialect_[kHIDUsage_GD_X] = PadButtonLeftStickX;
+		device->axisDialect_[kHIDUsage_GD_Y] = PadButtonLeftStickY;
+		device->buttonDialect_[0x01] = PadButtonB;
+		device->buttonDialect_[0x02] = PadButtonA;
+		device->buttonDialect_[0x09] = PadButtonSelect;
+		device->buttonDialect_[0x0a] = PadButtonStart;
+	}
 }
 
 static void OnDeviceRemoved(void* inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef inIOHIDDeviceRef)
