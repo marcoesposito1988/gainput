@@ -20,3 +20,5 @@ cmakebuild*/
 .gradle
 .externalNativeBuild
 gradle
+
+cmake-build-*
