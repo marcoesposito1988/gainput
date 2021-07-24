@@ -222,6 +222,25 @@ private:
 		{
 			axisDialect_[i] = i;
 		}
+		// 
+		if (strcmp(name, "Logitech Logitech Dual Action") == 0)
+		{
+#ifdef GAINPUT_DEBUG
+			GAINPUT_LOG("  --> known controller\n");
+#endif
+			buttonDialect_[0] = PadButtonX;
+			buttonDialect_[1] = PadButtonA;
+			buttonDialect_[2] = PadButtonB;
+			buttonDialect_[3] = PadButtonY;
+			buttonDialect_[4] = PadButtonL1;
+			buttonDialect_[5] = PadButtonR1;
+			buttonDialect_[6] = PadButtonL2;
+			buttonDialect_[7] = PadButtonR2;
+			buttonDialect_[8] = PadButtonHome;
+			buttonDialect_[9] = PadButtonStart;
+			buttonDialect_[10] = PadButtonLeft;
+			buttonDialect_[11] = PadButtonRight;
+		}
 
 		if (strcmp(name, "Sony PLAYSTATION(R)3 Controller") == 0)
 		{
