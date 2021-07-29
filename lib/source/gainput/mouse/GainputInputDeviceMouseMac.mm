@@ -18,7 +18,7 @@ static float theoreticalTitleBarHeight()
 {
 	NSRect frame = NSMakeRect (0, 0, 100, 100);
 	NSRect contentRect = [NSWindow contentRectForFrameRect:frame
-		styleMask:NSTitledWindowMask];
+		styleMask:NSWindowStyleMaskTitled];
 	return (frame.size.height - contentRect.size.height);
 }
 
@@ -44,7 +44,7 @@ CGEventRef MouseTap(CGEventTapProxy proxy, CGEventType type, CGEventRef event, v
 		NSRect rect = NSMakeRect(theLocation.x, theLocation.y, 0, 0);
 		NSRect rect2 = [window convertRectFromScreen:rect];
         
-        float titleBarHeight = (window.styleMask & NSFullScreenWindowMask) ? 0.0f : theoreticalTitleBarHeight();
+        float titleBarHeight = (window.styleMask & NSWindowStyleMaskFullScreen) ? 0.0f : theoreticalTitleBarHeight();
         const float x = rect2.origin.x / window.frame.size.width;
         const float y = 1.0f - (rect2.origin.y / (window.frame.size.height - titleBarHeight));
 
