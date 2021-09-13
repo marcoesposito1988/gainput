@@ -71,6 +71,8 @@ public:
 	 */
 	InputDevice(InputManager& manager, DeviceId device, unsigned index);
 
+	InputDevice(InputManager& manager, unsigned index);
+
 	/// Empty virtual destructor.
 	virtual ~InputDevice();
 
@@ -214,6 +216,7 @@ protected:
 	 * \return The number of buttons written to outButtons.
 	 */
 	size_t CheckAllButtonsDown(DeviceButtonSpec* outButtons, size_t maxButtonCount, unsigned start, unsigned end) const;
+friend class InputManager;
 };
 
 

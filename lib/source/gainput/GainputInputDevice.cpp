@@ -17,6 +17,18 @@ InputDevice::InputDevice(InputManager& manager, DeviceId device, unsigned index)
 {
 }
 
+InputDevice::InputDevice(InputManager& manager, unsigned index) :
+	manager_(manager),
+	deviceId_(unsigned(-1)),
+	index_(index),
+	deadZones_(0),
+	debugRenderingEnabled_(false)
+#if defined(GAINPUT_DEV) || defined(GAINPUT_ENABLE_RECORDER)
+		, synced_(false)
+#endif
+{
+}
+
 InputDevice::~InputDevice()
 {
 	manager_.GetAllocator().Deallocate(deadZones_);
