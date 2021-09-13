@@ -4,6 +4,8 @@
 
 #include "GainputInputDeviceMouseImpl.h"
 #include <gainput/GainputHelpers.h>
+#include <gainput/GainputAllocator.h>
+#include <gainput/GainputContainers.h>
 
 #include "../GainputWindows.h"
 
@@ -77,13 +79,15 @@ public:
 			return;
 		}
 
-		UINT dwSize = 40;
-		static BYTE lpb[40];
-	    
-		GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER));
-	    
-		RAWINPUT* raw = (RAWINPUT*)lpb;
-	    
+		UINT dwSize;
+		GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
+		
+		Array<BYTE> lpb(GetDefaultAllocator(), dwSize);
+		if (GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, lpb.begin(), &dwSize, sizeof(RAWINPUTHEADER)) != dwSize) {
+			return;
+		}
+	
+		RAWINPUT* raw = (RAWINPUT*)lpb.begin();
 		if (raw->header.dwType == RIM_TYPEMOUSE) 
 		{
 			if (raw->data.mouse.usFlags == MOUSE_MOVE_RELATIVE)

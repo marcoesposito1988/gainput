@@ -11,6 +11,7 @@
 #if defined(GAINPUT_PLATFORM_LINUX)
 	#include "GainputInputDeviceKeyboardLinux.h"
 	#include "GainputInputDeviceKeyboardEvdev.h"
+	#include "GainputInputDeviceKeyboardLinuxXI2.h"
 #elif defined(GAINPUT_PLATFORM_WIN)
 	#include "GainputInputDeviceKeyboardWin.h"
 	#include "GainputInputDeviceKeyboardWinRaw.h"
@@ -41,10 +42,17 @@ InputDeviceKeyboard::InputDeviceKeyboard(InputManager& manager, DeviceId device,
 	{
 		impl_ = manager.GetAllocator().New<InputDeviceKeyboardImplLinux>(manager, *this, *state_, *previousState_);
 	}
+#if defined(GAINPUT_ENABLE_XI2)
+	else if (variant == DV_RAW)
+	{
+		impl_ = manager.GetAllocator().New<InputDeviceKeyboardImplLinuxXI2>(manager, *this, *state_, *previousState_);
+	}
+#else
 	else if (variant == DV_RAW)
 	{
 		impl_ = manager.GetAllocator().New<InputDeviceKeyboardImplEvdev>(manager, *this, *state_, *previousState_);
 	}
+#endif
 #elif defined(GAINPUT_PLATFORM_WIN)
 	if (variant == DV_STANDARD)
 	{

@@ -6,6 +6,9 @@
 
 #include "GainputInputDeviceKeyboardImpl.h"
 #include <gainput/GainputHelpers.h>
+#include <gainput/GainputAllocator.h>
+#include <gainput/GainputContainers.h>
+
 
 #ifndef HID_USAGE_PAGE_GENERIC
 #define HID_USAGE_PAGE_GENERIC         ((USHORT) 0x01)
@@ -191,12 +194,18 @@ public:
 			return;
 		}
 
-		UINT dwSize = 40;
-		static BYTE lpb[40];
-	    
-		GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER));
-		RAWINPUT* raw = (RAWINPUT*)lpb;
-	    
+		UINT dwSize;
+		GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
+		
+		// We aren't really supposed to use STL nor C++ in Gainput,
+		// and neither should we allocate memory everytime an event is fired.
+		// So will just keep this as a temporary solution until time allows.
+		Array<BYTE> lpb(GetDefaultAllocator(), dwSize);
+		if (GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, lpb.begin(), &dwSize, sizeof(RAWINPUTHEADER)) != dwSize) {
+			return;
+		}
+	
+		RAWINPUT* raw = (RAWINPUT*)lpb.begin();
 		if (raw->header.dwType == RIM_TYPEKEYBOARD) 
 		{
 			USHORT vkey = raw->data.keyboard.VKey;
@@ -227,7 +236,7 @@ public:
 			{
 				const DeviceButtonId buttonId = dialect_[vkey];
 #ifdef GAINPUT_DEBUG
-				GAINPUT_LOG("%d mapped to: %d\n", vkey, buttonId);
+				GAINPUT_LOG("Keyboard key %d mapped to: %d\n", vkey, buttonId);
 #endif
 				const bool pressed = raw->data.keyboard.Message == WM_KEYDOWN || raw->data.keyboard.Message == WM_SYSKEYDOWN;
 				HandleButton(device_, nextState_, delta_, buttonId, pressed);

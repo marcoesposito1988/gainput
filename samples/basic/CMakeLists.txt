@@ -27,6 +27,11 @@ target_link_libraries(basicsample gainput)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	target_link_libraries(basicsample X11 GL rt)
+	target_link_libraries(basicsample X11 GL rt Xext Xi)
+elseif(WIN32)
+	target_link_libraries(basicsample ${XINPUT} ws2_32)
+elseif(APPLE)
+    target_link_libraries(basicsample ${FOUNDATION} ${IOKIT} ${APPKIT} ${GAME_CONTROLLER})
 endif()
 
 if(BUILD_SHARED_LIBS)
