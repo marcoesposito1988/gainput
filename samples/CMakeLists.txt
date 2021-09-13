@@ -15,6 +15,7 @@ add_subdirectory(basic)
 add_subdirectory(dynamic)
 add_subdirectory(gesture)
 add_subdirectory(listener)
+add_subdirectory(qt-example)
 add_subdirectory(recording)
 add_subdirectory(sync)
 
