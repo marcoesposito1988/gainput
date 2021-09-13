@@ -174,7 +174,50 @@ static void OnDeviceConnected(void* inContext, IOReturn inResult, void* inSender
 		}
 	}
 
-	if (vendorId == 0x054c && (productId == 0x5c4 || productId == 0x9cc)) // Sony DualShock 4
+	if (vendorId == 0x46D && productId == 0xC21F) // Logitech wireless gamepad F710 controller
+	{
+		printf("Found Logitech controller.\n");
+		device->minAxis_ = -(1<<15);
+		device->maxAxis_ = 1<<15;
+		device->minTriggerAxis_ = 0;
+		device->maxTriggerAxis_ = 255;
+		device->axisDialect_[kHIDUsage_GD_X] = PadButtonLeftStickX;
+		device->axisDialect_[kHIDUsage_GD_Y] = PadButtonLeftStickY;
+		device->axisDialect_[kHIDUsage_GD_Rx] = PadButtonRightStickX;
+		device->axisDialect_[kHIDUsage_GD_Ry] = PadButtonRightStickY;
+		device->axisDialect_[kHIDUsage_GD_Z] = PadButtonAxis4;
+		device->axisDialect_[kHIDUsage_GD_Rz] = PadButtonAxis5;
+		device->buttonDialect_[0x0a] = PadButtonSelect;
+		device->buttonDialect_[0x07] = PadButtonL3;
+		device->buttonDialect_[0x08] = PadButtonR3;
+		device->buttonDialect_[0x09] = PadButtonStart;
+		device->buttonDialect_[0x0c] = PadButtonUp;
+		device->buttonDialect_[0x0f] = PadButtonRight;
+		device->buttonDialect_[0x0d] = PadButtonDown;
+		device->buttonDialect_[0x0e] = PadButtonLeft;
+		device->buttonDialect_[0x05] = PadButtonL1;
+		device->buttonDialect_[0x06] = PadButtonR1;
+		device->buttonDialect_[0x04] = PadButtonY;
+		device->buttonDialect_[0x02] = PadButtonB;
+		device->buttonDialect_[0x01] = PadButtonA;
+		device->buttonDialect_[0x03] = PadButtonX;
+		device->buttonDialect_[0x0b] = PadButtonHome;
+	}
+	else if (vendorId == 0x2563 && productId == 0x575)   // XCSource ZM-X6 Bluetooth gamepad https://www.amazon.com.au/gp/product/B078H5PVJR/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1
+	{
+		printf("Found XCSource ZM-X6 Bluetooth controller.\n");
+		device->minAxis_ = 0;
+		device->maxAxis_ = 256;
+		device->minTriggerAxis_ = device->minAxis_;
+		device->maxTriggerAxis_ = device->maxAxis_;
+		device->axisDialect_[kHIDUsage_GD_X] = PadButtonLeftStickX;
+		device->axisDialect_[kHIDUsage_GD_Y] = PadButtonLeftStickY;
+		device->axisDialect_[kHIDUsage_GD_Z] = PadButtonRightStickX;
+		device->axisDialect_[kHIDUsage_GD_Rz] = PadButtonRightStickY;
+		device->buttonDialect_[0x05] = PadButtonL1;
+		device->buttonDialect_[0x03] = PadButtonA;
+	}
+	else if (vendorId == 0x054c && (productId == 0x5c4 || productId == 0x9cc)) // Sony DualShock 4
 	{
 		device->minAxis_ = 0;
 		device->maxAxis_ = 256;
@@ -276,6 +319,10 @@ static void OnDeviceConnected(void* inContext, IOReturn inResult, void* inSender
 		device->buttonDialect_[0x09] = PadButtonSelect;
 		device->buttonDialect_[0x0a] = PadButtonStart;
 	}
+	else {
+		printf("Found unknown pad, disabled. VendorID: 0x%lX ProductID: 0x%lX.\n", vendorId, productId);
+	}
+
 }
 
 static void OnDeviceRemoved(void* inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef inIOHIDDeviceRef)
