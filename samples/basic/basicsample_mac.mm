@@ -1,7 +1,6 @@
 
 #include <gainput/gainput.h>
 
-#if defined(GAINPUT_PLATFORM_MAC)
 #include <iostream>
 
 #import <Cocoa/Cocoa.h>
@@ -102,5 +101,4 @@ int main(int argc, char** argv)
 
 	return 0;
 }
-#endif
 

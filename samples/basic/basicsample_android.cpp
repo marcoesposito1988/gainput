@@ -1,8 +1,6 @@
 
 #include <gainput/gainput.h>
 
-#if defined(GAINPUT_PLATFORM_ANDROID)
-
 #include <jni.h>
 #include <errno.h>
 
@@ -101,6 +99,4 @@ void android_main(struct android_app* state)
 	ANativeActivity_finish(state->activity);
 }
 
-
-#endif
 

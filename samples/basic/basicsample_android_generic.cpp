@@ -1,7 +1,6 @@
 
 #include <gainput/gainput.h>
 
-#if defined(GAINPUT_PLATFORM_ANDROID)
 
 #include <jni.h>
 #include <android/log.h>
@@ -73,5 +72,4 @@ Java_com_example_gainput_gainput_BasicActivity_nativeOnUpdate(JNIEnv * /*env*/, 
 
 }
 
-#endif
 

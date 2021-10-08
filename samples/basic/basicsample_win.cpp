@@ -1,7 +1,6 @@
 
 #include <gainput/gainput.h>
 
-#if defined(GAINPUT_PLATFORM_WIN)
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -155,5 +154,4 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	return 0;
 }
-#endif
 

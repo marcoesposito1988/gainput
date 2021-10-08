@@ -1,7 +1,6 @@
 
 #include <gainput/gainput.h>
 
-#if defined(GAINPUT_PLATFORM_IOS)
 #include <iostream>
 
 #import <UIKit/UIKit.h>
@@ -110,5 +109,4 @@ int main(int argc, char * argv[])
       return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
   }
 }
-#endif
 

@@ -1,7 +1,6 @@
 
 #include <gainput/gainput.h>
 
-#if defined(GAINPUT_PLATFORM_LINUX) && defined(GAINPUT_ENABLE_XI2)
 #include <X11/Xlib.h>
 #include <X11/extensions/XInput2.h>
 #include <iostream>
@@ -123,5 +122,4 @@ int main(int argc, char** argv)
 
     return 0;
 }
-#endif
 
