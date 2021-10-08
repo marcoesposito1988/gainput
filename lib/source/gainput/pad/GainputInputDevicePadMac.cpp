@@ -278,7 +278,7 @@ static void OnDeviceConnected(void* inContext, IOReturn inResult, void* inSender
 		device->buttonDialect_[16] = PadButtonX;
 		device->buttonDialect_[17] = PadButtonHome;
 	}
-	else if (vendorId == 0x045e && (productId == 0x028E || productId == 0x028F || productId == 0x02D1)) // Microsoft 360 Controller wired/wireless, Xbox One Controller
+	else if (vendorId == 0x045e && (productId == 0x028E || productId == 0x028F || productId == 0x02D1 || productId == 0x02FD)) // Microsoft 360 Controller wired/wireless, Xbox One Controller
 	{
 		device->minAxis_ = -(1<<15);
 		device->maxAxis_ = 1<<15;
